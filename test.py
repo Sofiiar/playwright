@@ -18,10 +18,9 @@ def run(playwright: Playwright) -> None:
     expect(page.locator("[data-test=\"login-button\"]")).to_be_hidden(timeout=3000)
     expect(page.locator("text=Swag Labs")).to_be_visible()
 
-    all_imgs = page.locator("img")
-
-    for i in range(all_imgs.count()):
-        img_src = all_imgs.nth(i).get_attribute('src')
+    all_images = page.locator("img")
+    for i in range(all_images.count()):
+        img_src = all_images.nth(i).get_attribute('src')
         if img_src and '/static' in img_src:
             assert '/media' in img_src
 
