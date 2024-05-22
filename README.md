@@ -1,4 +1,4 @@
 # Playwright
 
-[(https://playwright.dev/python/docs/input)]
+[Documentation](https://playwright.dev/python/docs/input)
 
