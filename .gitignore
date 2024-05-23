@@ -139,4 +139,5 @@ cython_debug/
 .editorconfig
 
 #
-/utils/secret_config.py*.webm
+/utils/secret_config.py
+*.webm
