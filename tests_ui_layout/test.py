@@ -1,5 +1,7 @@
 import pytest
 from playwright.sync_api import expect
+
+import utils.secret_config
 from pom.home_page_elements import HomePage
 from pom.login_page import LoginPage
 
@@ -17,7 +19,7 @@ def test_logged_user_can_view_products(set_up, user_name) -> None:
     home_page = HomePage(page)
     login_page = LoginPage(page)
 
-    login_page.login(user_name, "secret_sauce")
+    login_page.login(user_name, utils.secret_config.PASSWORD)
 
     expect(page.locator("[data-test='login-button']")).to_be_hidden(timeout=3000)
     expect(home_page.home_page_title).to_be_visible()
