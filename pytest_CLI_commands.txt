@@ -1,0 +1,8 @@
+Allow max failures before stopping:
+    pytest --maxfail=2
+
+Run single test:
+    pytest -k test_func_name
+
+ Re-run last failed test only:
+    pytest --lf
