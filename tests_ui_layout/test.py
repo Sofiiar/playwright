@@ -5,6 +5,12 @@ from playwright.sync_api import expect
 from pom.home_page_elements import HomePage
 from pom.login_page import LoginPage
 
+try:
+    PASSWORD = os.environ['PASSWORD']
+except KeyError:
+    import utils.secret_config
+    PASSWORD = utils.secret_config.PASSWORD
+
 
 @pytest.mark.smoke
 @pytest.mark.parametrize("user_name", ["standard_user",
@@ -19,7 +25,7 @@ def test_logged_user_can_view_products(set_up, user_name) -> None:
     home_page = HomePage(page)
     login_page = LoginPage(page)
 
-    login_page.login(user_name, os.environ['PASSWORD'])
+    login_page.login(user_name, PASSWORD)
 
     expect(page.locator("[data-test='login-button']")).to_be_hidden(timeout=3000)
     expect(home_page.home_page_title).to_be_visible()

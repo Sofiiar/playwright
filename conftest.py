@@ -1,7 +1,12 @@
 import os
 import pytest
-
 from pom.login_page import LoginPage
+
+try:
+    PASSWORD = os.environ['PASSWORD']
+except KeyError:
+    import utils.secret_config
+    PASSWORD = utils.secret_config.PASSWORD
 
 
 @pytest.fixture
@@ -15,5 +20,5 @@ def set_up(page):
 @pytest.fixture
 def login(set_up):
     login_page = LoginPage(set_up)
-    login_page.login("standard_user", os.environ['PASSWORD'])
+    login_page.login("standard_user", PASSWORD)
     yield set_up
