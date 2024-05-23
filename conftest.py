@@ -1,6 +1,6 @@
+import os
 import pytest
 
-import utils.secret_config
 from pom.login_page import LoginPage
 
 
@@ -15,5 +15,5 @@ def set_up(page):
 @pytest.fixture
 def login(set_up):
     login_page = LoginPage(set_up)
-    login_page.login("standard_user", utils.secret_config.PASSWORD)
+    login_page.login("standard_user", os.environ['PASSWORD'])
     yield set_up
