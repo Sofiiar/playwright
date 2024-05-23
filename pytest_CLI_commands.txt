@@ -6,3 +6,12 @@ Run single test:
 
  Re-run last failed test only:
     pytest --lf
+
+ Run in headed mode
+    pytest --headed test.py
+
+Run on mobile version of Chromium
+    pytest --headed --browser=chromium --slowmo=400 --device="iPhone 14" test.py
+
+Setting url
+    --base-url=https://www.saucedemo.com/
