@@ -1,21 +1,23 @@
 import pytest
-from playwright.sync_api import Playwright, sync_playwright, expect
+from playwright.sync_api import expect
 from pom.home_page_elements import HomePage
 from pom.login_page import LoginPage
 
 
 @pytest.mark.smoke
-def test_login(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+@pytest.mark.parametrize("user_name", ["standard_user",
+                                       pytest.param("locked_out_user", marks=pytest.mark.xfail),
+                                       "problem_user",
+                                       "performance_glitch_user",
+                                       "error_user",
+                                       "visual_user"])
+def test_logged_user_can_view_products(set_up, user_name) -> None:
+    page = set_up
 
-    login_page = LoginPage(page)
     home_page = HomePage(page)
+    login_page = LoginPage(page)
 
-    page.wait_for_load_state("networkidle")
-    login_page.navigate()
-    login_page.login("standard_user", "secret_sauce")
+    login_page.login(user_name, "secret_sauce")
 
     expect(page.locator("[data-test='login-button']")).to_be_hidden(timeout=3000)
     expect(home_page.home_page_title).to_be_visible()
@@ -28,17 +30,10 @@ def test_login(playwright: Playwright) -> None:
 
 
 @pytest.mark.regression
-def test_login_2(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+def test_logged_user_can_view_products_2(login) -> None:
+    page = login
 
-    login_page = LoginPage(page)
     home_page = HomePage(page)
-
-    page.wait_for_load_state("networkidle")
-    login_page.navigate()
-    login_page.login("standard_user", "secret_sauce")
 
     expect(page.locator("[data-test='login-button']")).to_be_hidden(timeout=3000)
     expect(home_page.home_page_title).to_be_visible()
@@ -51,17 +46,10 @@ def test_login_2(playwright: Playwright) -> None:
 
 
 @pytest.mark.integration
-def test_login_3(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+def test_logged_user_can_view_products_3(login) -> None:
+    page = login
 
-    login_page = LoginPage(page)
     home_page = HomePage(page)
-
-    page.wait_for_load_state("networkidle")
-    login_page.navigate()
-    login_page.login("standard_user", "secret_sauce")
 
     expect(page.locator("[data-test='login-button']")).to_be_hidden(timeout=3000)
     expect(home_page.home_page_title).to_be_visible()
@@ -71,14 +59,3 @@ def test_login_3(playwright: Playwright) -> None:
         img_src = all_images.nth(i).get_attribute('src')
         if img_src and '/static' in img_src:
             assert '/media' in img_src
-
-
-# ---------------------
-
-    page.close()
-    context.close()
-    browser.close()
-
-
-with sync_playwright() as playwright:
-    test_login(playwright)
